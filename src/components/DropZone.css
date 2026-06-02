@@ -1,0 +1,226 @@
+.dropzone-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  min-height: 0;
+}
+
+.dropzone-card {
+  width: 100%;
+  max-width: 640px;
+  background: var(--bg-card);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  overflow: hidden;
+}
+
+.dropzone-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 56px 40px;
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-xl);
+  margin: 20px;
+  cursor: pointer;
+  text-align: center;
+  transition: border-color var(--t-normal), background var(--t-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.dropzone-area:hover,
+.dropzone-area.dragging {
+  border-color: var(--accent);
+  background: var(--accent-light);
+}
+
+.dropzone-area.dragging {
+  border-style: solid;
+  transform: scale(1.005);
+}
+
+.dropzone-icon-wrapper {
+  width: 80px;
+  height: 80px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #3B82F6, #8B5CF6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 32px rgba(59, 130, 246, 0.35);
+  flex-shrink: 0;
+}
+
+.dropzone-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+.dropzone-subtitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.dropzone-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 300px;
+}
+
+.dropzone-divider-line {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.dropzone-divider-text {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.dropzone-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #3B82F6, #6366F1);
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: var(--radius-full);
+  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.4);
+  transition: box-shadow var(--t-normal), transform var(--t-fast);
+  cursor: pointer;
+  border: none;
+}
+
+.dropzone-btn:hover {
+  box-shadow: 0 6px 24px rgba(59, 130, 246, 0.5);
+  transform: translateY(-1px);
+}
+
+.dropzone-btn:active {
+  transform: translateY(0);
+}
+
+.dropzone-file-input {
+  display: none;
+}
+
+.dropzone-hint {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* Bottom info */
+.dropzone-info {
+  padding: 20px 28px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.dropzone-info-section {
+  flex: 1;
+}
+
+.dropzone-info-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+}
+
+.dropzone-info-code {
+  font-family: 'Monaco', 'Menlo', monospace;
+  font-size: 11px;
+  color: var(--text-secondary);
+  background: var(--bg-secondary);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  line-height: 1.6;
+  border: 1px solid var(--border);
+}
+
+.dropzone-demo-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--t-normal);
+  margin-top: 8px;
+}
+
+.dropzone-demo-btn:hover {
+  background: var(--accent-light);
+  border-color: var(--accent);
+  color: var(--accent-text);
+}
+
+/* Error Banner */
+.error-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  background: #FEF2F2;
+  border: 1px solid #FECACA;
+  border-radius: var(--radius-md);
+  margin: 20px;
+}
+
+[data-theme="dark"] .error-banner {
+  background: rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.25);
+}
+
+.error-banner-text {
+  flex: 1;
+  font-size: 13px;
+  color: #DC2626;
+  font-weight: 500;
+}
+
+[data-theme="dark"] .error-banner-text {
+  color: #F87171;
+}
+
+.error-banner-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-full);
+  color: #DC2626;
+  background: rgba(239, 68, 68, 0.1);
+  flex-shrink: 0;
+  transition: background var(--t-fast);
+}
+
+.error-banner-close:hover {
+  background: rgba(239, 68, 68, 0.2);
+}

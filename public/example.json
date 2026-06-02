@@ -1,0 +1,26 @@
+[
+  { "id": "t01", "project_name": "HV Transformer Replacement", "line_name": "Line 1", "start_date": "2028-01-10", "end_date": "2028-02-20", "status": "approved" },
+  { "id": "t02", "project_name": "Cable Jointing & Test", "line_name": "Line 1", "start_date": "2028-02-22", "end_date": "2028-03-10", "status": "planned", "depends_on": [{"id": "t01", "type": "FS", "lag": 2}] },
+  { "id": "t03", "project_name": "Protection Relay Upgrade", "line_name": "Line 1", "start_date": "2028-03-12", "end_date": "2028-03-25", "status": "planned", "depends_on": [{"id": "t02", "type": "FS", "lag": 2}] },
+
+  { "id": "t04", "project_name": "Turbine Overhaul A", "line_name": "Line 2", "start_date": "2028-02-01", "end_date": "2028-04-10", "status": "approved" },
+  { "id": "t05", "project_name": "Generator Rewinding", "line_name": "Line 2", "start_date": "2028-04-14", "end_date": "2028-05-20", "status": "planned", "depends_on": [{"id": "t04", "type": "FS", "lag": 4}] },
+
+  { "id": "t06", "project_name": "Pipeline Inspection", "line_name": "Line 3", "start_date": "2028-01-08", "end_date": "2028-01-22", "status": "in-progress" },
+  { "id": "t07", "project_name": "Heat Exchanger Replacement", "line_name": "Line 3", "start_date": "2028-02-10", "end_date": "2028-03-28", "status": "approved", "depends_on": [{"id": "t06", "type": "FS", "lag": 19}] },
+
+  { "id": "t08", "project_name": "SCADA Control System Upgrade", "line_name": "Line 4", "start_date": "2028-01-20", "end_date": "2028-04-10", "status": "in-progress" },
+  { "id": "t09", "project_name": "Instrumentation Calibration", "line_name": "Line 4", "start_date": "2028-04-15", "end_date": "2028-05-30", "status": "planned", "depends_on": [{"id": "t08", "type": "FS", "lag": 5}] },
+
+  { "id": "t10", "project_name": "Safety Valve Audit", "line_name": "Line 5", "start_date": "2028-01-15", "end_date": "2028-01-15", "status": "completed" },
+  { "id": "t11", "project_name": "Cooling Tower Maintenance", "line_name": "Line 5", "start_date": "2028-02-20", "end_date": "2028-03-30", "status": "approved", "depends_on": [{"id": "t10", "type": "FS", "lag": 36}] },
+
+  { "id": "t12", "project_name": "Switchgear Overhaul", "line_name": "Line 6", "start_date": "2028-03-01", "end_date": "2028-05-15", "status": "planned" },
+  { "id": "t13", "project_name": "Emergency Shutdown System Test", "line_name": "Line 6", "start_date": "2028-05-20", "end_date": "2028-05-20", "status": "planned", "depends_on": [{"id": "t12", "type": "FS", "lag": 5}] },
+
+  { "id": "t14", "project_name": "Pump Station Renovation", "line_name": "Line 7", "start_date": "2028-01-05", "end_date": "2028-03-10", "status": "in-progress" },
+  { "id": "t15", "project_name": "Compressor Overhaul", "line_name": "Line 8", "start_date": "2028-04-01", "end_date": "2028-05-20", "status": "planned" },
+
+  { "id": "t16", "project_name": "Reactor Inspection", "line_name": "Line 9", "start_date": "2028-02-28", "end_date": "2028-02-28", "status": "approved" },
+  { "id": "t17", "project_name": "Steam Generator Replacement", "line_name": "Line 10", "start_date": "2028-01-12", "end_date": "2028-05-01", "status": "planned" }
+]

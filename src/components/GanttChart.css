@@ -1,0 +1,291 @@
+/* ── Outer shell ── */
+.gantt-outer {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  position: relative; /* anchor for scroll-nav overlay */
+}
+
+/* ── Header ── */
+.gantt-header-row {
+  display: flex;
+  flex-shrink: 0;
+  background: var(--header-bg);
+  border-bottom: 2px solid var(--border);
+  z-index: 10;
+}
+
+.gantt-corner {
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-end;
+  padding: 0 14px 6px;
+  border-right: 2px solid var(--border);
+  background: var(--corner-bg);
+}
+
+.corner-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--text-muted);
+}
+
+.gantt-header-scroll { flex: 1; min-width: 0; overflow: hidden; }
+.gantt-header-inner  { position: relative; }
+
+/* ── Header bands ── */
+.timeline-row { position: relative; width: 100%; }
+
+.timeline-cell {
+  position: absolute; top: 0; bottom: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 600; overflow: hidden; white-space: nowrap;
+  user-select: none;
+  border-right: 1px solid var(--grid-line);
+}
+
+.month-cell {
+  font-size: 11px;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-faint);
+  letter-spacing: 0.02em;
+}
+.month-cell.year    { font-size: 13px; color: var(--text-primary); font-weight: 700; }
+.month-cell.quarter { font-size: 12px; }
+
+.week-cell {
+  font-size: 10px;
+  color: var(--primary);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  background: rgba(139,92,246,0.04);
+}
+.dark .week-cell { background: rgba(139,92,246,0.08); }
+
+.day-cell { font-size: 10px; color: var(--text-muted); font-weight: 500; }
+.day-cell.weekend {
+  color: var(--destructive);
+  background: var(--grid-weekend);
+}
+
+/* ── Scrollable body ── */
+.gantt-body {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  overflow-x: auto;
+  overflow-y: auto;
+  touch-action: pan-x pan-y;
+}
+
+/* ── Left label column (sticky) ── */
+.gantt-left-col {
+  flex-shrink: 0;
+  position: sticky;
+  left: 0;
+  z-index: 6;
+  background: var(--corner-bg);
+  border-right: 2px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  align-self: flex-start;
+  min-height: 100%;
+}
+
+/* Resize handle */
+.col-resize-handle {
+  position: absolute; top: 0; bottom: 0; right: -4px;
+  width: 8px; cursor: col-resize; z-index: 7;
+  display: flex; align-items: center; justify-content: center;
+}
+.col-resize-handle::after {
+  content: '';
+  width: 2px; height: 24px;
+  border-radius: 1px;
+  background: var(--border-strong);
+  transition: background 0.15s;
+}
+.col-resize-handle:hover::after,
+.col-resize-handle.resizing::after { background: var(--primary); }
+
+/* ── Row label cells ── */
+.row-label-cell {
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 5px 12px 5px 14px;
+  border-bottom: 1px solid var(--border-faint);
+  gap: 2px; min-width: 0;
+  transition: background 0.12s;
+}
+.row-label-cell:hover { background: var(--bg-hover); }
+
+.row-label-primary {
+  font-size: 12px; font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  line-height: 1.35;
+}
+.row-label-secondary {
+  font-size: 10px; color: var(--text-muted);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.row-item-count {
+  font-size: 10px; color: var(--text-dim);
+  display: flex; align-items: center; gap: 5px; margin-top: 1px;
+}
+.row-overlap-badge {
+  display: inline-flex; align-items: center;
+  padding: 1px 5px; border-radius: 4px;
+  background: rgba(217,119,6,0.12);
+  color: var(--warning); font-size: 9px; font-weight: 700;
+  border: 1px solid rgba(217,119,6,0.25);
+}
+
+/* ── Chart area ── */
+.gantt-chart-area { position: relative; flex-shrink: 0; }
+
+/* ── Grid ── */
+.gantt-grid-layer {
+  position: absolute; inset: 0;
+  pointer-events: none; z-index: 0;
+}
+
+.grid-month-line {
+  position: absolute; top: 0; bottom: 0;
+  width: 1px; background: var(--grid-line);
+}
+.grid-weekend-col {
+  position: absolute; top: 0; bottom: 0;
+  background: var(--grid-weekend);
+}
+.grid-row-line {
+  position: absolute; left: 0; right: 0;
+  height: 1px; background: var(--border-faint);
+}
+.grid-row-even {
+  position: absolute; left: 0; right: 0;
+  background: var(--row-alt); pointer-events: none;
+}
+.grid-today-line {
+  position: absolute; top: 0; bottom: 0;
+  width: 2px; background: var(--today-line);
+  box-shadow: 0 0 10px var(--today-glow), 0 0 3px var(--today-glow);
+  z-index: 4;
+}
+.today-label {
+  position: absolute; top: 4px; left: 5px;
+  font-size: 9px; font-weight: 700;
+  color: var(--today-line); white-space: nowrap;
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+
+/* ── Rows ── */
+.gantt-row { position: absolute; left: 0; right: 0; overflow: visible; }
+
+/* ── Overlap zone ── */
+.overlap-zone {
+  position: absolute; top: 0;
+  background: var(--overlap-zone);
+  border-left: 1px dashed var(--overlap-border);
+  border-right: 1px dashed var(--overlap-border);
+  pointer-events: none; z-index: 1;
+}
+
+/* ── Empty state ── */
+.gantt-empty {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 12px; padding: 80px 20px;
+  color: var(--text-muted);
+}
+.gantt-empty-icon { font-size: 36px; }
+.gantt-empty-text { font-size: 14px; font-weight: 500; }
+
+/* --------------------------------------------------------------
+   FLOATING SCROLL NAVIGATION
+   -------------------------------------------------------------- */
+.gantt-scroll-nav {
+  position: absolute;
+  bottom: 14px;
+  right: 18px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  z-index: 20;
+  pointer-events: all;
+}
+
+.gantt-scroll-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 30px;
+  padding: 0 10px;
+  border-radius: 15px;
+  background: var(--popover);
+  border: 1px solid var(--border-strong);
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  box-shadow: var(--shadow-md);
+  transition: all 0.15s;
+  white-space: nowrap;
+  opacity: 0.88;
+}
+.gantt-scroll-btn:hover {
+  opacity: 1;
+  background: var(--bg-hover);
+  color: var(--primary);
+  border-color: var(--ring);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg);
+}
+
+.gantt-scroll-btn .scroll-btn-bar {
+  font-size: 14px;
+  line-height: 1;
+  opacity: 0.6;
+  margin-right: -4px;
+}
+
+.gantt-scroll-today {
+  font-size: 11px;
+  color: var(--primary);
+  background: var(--accent-dim);
+  border-color: var(--ring);
+}
+.gantt-scroll-today:hover {
+  background: var(--bg-selected);
+}
+
+/* ── Always-visible scrollbar on the body ── */
+.gantt-body {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) var(--muted);
+}
+.gantt-body::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+.gantt-body::-webkit-scrollbar-track {
+  background: var(--muted);
+  border-radius: 0;
+}
+.gantt-body::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 4px;
+  border: 2px solid var(--muted);
+}
+.gantt-body::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
+.gantt-body::-webkit-scrollbar-corner {
+  background: var(--muted);
+}

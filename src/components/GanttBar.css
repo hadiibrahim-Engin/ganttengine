@@ -1,0 +1,144 @@
+/* ── Milestone (diamond) ── */
+.ms-wrap {
+  position: absolute; cursor: grab; z-index: 3; touch-action: none;
+}
+.ms-wrap.is-dragging { cursor: grabbing; z-index: 10; }
+
+.ms-diamond {
+  width: 20px; height: 20px; border-radius: 3px;
+  transform: rotate(45deg);
+  transition: box-shadow 0.15s, transform 0.15s;
+  border: 2px solid rgba(255,255,255,0.25);
+}
+.dark .ms-diamond { border-color: rgba(255,255,255,0.18); }
+.ms-diamond.selected {
+  transform: rotate(45deg) scale(1.2);
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+}
+
+.bar-bundle-dot {
+  position: absolute; top: -4px; right: -4px;
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--warning);
+  border: 1px solid rgba(0,0,0,0.3);
+  box-shadow: 0 0 4px rgba(245,158,11,0.5);
+}
+
+/* ── Bar wrap ── */
+.gantt-bar-wrap {
+  position: absolute; cursor: grab; z-index: 2;
+  touch-action: none; border-radius: 7px;
+  will-change: transform;
+}
+.gantt-bar-wrap.is-dragging { cursor: grabbing; z-index: 10; }
+.gantt-bar-wrap.has-overlap  { z-index: 3; }
+
+/* Drag delta badge */
+.drag-badge {
+  position: absolute; top: -26px; left: 50%;
+  transform: translateX(-50%);
+  background: var(--primary); color: var(--primary-foreground);
+  font-size: 11px; font-weight: 700;
+  padding: 3px 9px; border-radius: 20px;
+  white-space: nowrap; pointer-events: none; z-index: 20;
+  box-shadow: 0 2px 10px var(--accent-glow);
+}
+
+/* ── Bar itself ── */
+.gantt-bar {
+  width: 100%; border-radius: 7px;
+  position: relative; overflow: hidden;
+  display: flex; align-items: center;
+  transition: box-shadow 0.15s;
+  border: 1px solid var(--bar-border);
+}
+.gantt-bar.selected {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+.gantt-bar.type-outofoperation {
+  background: linear-gradient(90deg,#B91C1C,#EF4444) !important;
+  border-color: rgba(255,255,255,0.18);
+}
+.gantt-bar.type-backinoperation { border-radius: 50vh; }
+
+.bar-stripe {
+  position: absolute; inset: 0; border-radius: inherit;
+  background-image: repeating-linear-gradient(
+    -45deg, transparent 0px, transparent 7px,
+    rgba(0,0,0,0.2) 7px, rgba(0,0,0,0.2) 11px
+  );
+  pointer-events: none;
+}
+
+.bar-shine {
+  position: absolute; top: 0; left: 0; right: 0; height: 45%;
+  background: linear-gradient(to bottom, var(--bar-shine) 0%, transparent 100%);
+  border-radius: inherit; pointer-events: none;
+}
+
+.bar-content {
+  position: relative; z-index: 1;
+  padding: 0 7px; display: flex;
+  align-items: center; flex: 1; min-width: 0; overflow: hidden;
+}
+
+.bar-label {
+  font-size: 11px; font-weight: 600;
+  color: rgba(255,255,255,0.96);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.45);
+}
+
+.bar-bundle-icon {
+  position: absolute; right: 5px; top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255,255,255,0.75); display: flex; z-index: 2;
+}
+
+/* ── Tooltip ── */
+.bar-tooltip {
+  position: fixed; z-index: 9999;
+  padding: 11px 14px;
+  background: var(--popover);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-xl);
+  min-width: 200px; max-width: 280px;
+  pointer-events: none;
+  color: var(--popover-foreground);
+}
+
+.tooltip-type-row  { display:flex; align-items:center; gap:7px; margin-bottom:6px; }
+.tooltip-type-dot  { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
+.tooltip-type      { font-size:10px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.07em; flex:1; }
+.tooltip-bundle    { display:inline-flex; align-items:center; gap:3px; font-size:10px; color:var(--warning); background:rgba(245,158,11,0.12); border:1px solid rgba(245,158,11,0.25); border-radius:5px; padding:1px 6px; }
+.tooltip-title     { font-size:13px; font-weight:700; color:var(--foreground); margin-bottom:3px; line-height:1.35; }
+.tooltip-meta      { font-size:11px; color:var(--text-muted); margin-bottom:2px; }
+.tooltip-dates     { display:flex; align-items:center; gap:6px; font-size:11px; color:var(--text-secondary); margin-top:8px; padding-top:8px; border-top:1px solid var(--border-faint); }
+.tooltip-drag-delta{ font-size:13px; font-weight:700; color:var(--primary); margin-top:5px; }
+.tooltip-overlap   { display:inline-flex; align-items:center; gap:4px; font-size:10px; color:var(--warning); background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.2); border-radius:4px; padding:2px 7px; margin-top:5px; }
+.tooltip-hint      { font-size:10px; color:var(--text-dim); margin-top:6px; font-style:italic; }
+
+/* ── No-date placeholder bar ── */
+.no-date-wrap {
+  cursor: pointer;
+  z-index: 1;
+}
+.no-date-bar {
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--bg-card)         0px,
+    var(--bg-card)         6px,
+    var(--border-faint)    6px,
+    var(--border-faint)    10px
+  ) !important;
+  border: 1px dashed var(--border-strong) !important;
+  opacity: 0.72;
+}
+.no-date-label {
+  color: var(--text-muted) !important;
+  font-style: italic;
+  text-shadow: none !important;
+}
