@@ -418,8 +418,6 @@ export default function App() {
         </div>
       )}
 
-      )}
-
       <main className="app-main">
         {/* Toolbar sits OUTSIDE the overflow-hidden chart area so its
             dropdowns are never clipped by the chart's scroll container */}
