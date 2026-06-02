@@ -290,22 +290,37 @@ export function exportExcel(items, projects, assets) {
   download(blob, 'gantt-export.xls');
 }
 
-// ── PNG EXPORT ───────────────────────────────────────────────────────────────
+// ── IMAGE EXPORT ─────────────────────────────────────────────────────────────
 
-export async function exportPNG(element) {
-  const { toPng } = await import('html-to-image');
-  element.classList.add('exporting');
-  await new Promise(r => requestAnimationFrame(r));
-  await new Promise(r => requestAnimationFrame(r));
-  await new Promise(r => setTimeout(r, 60));
+export async function exportPNG(element, options = {}) {
+  return exportChartImage(element, { ...options, format: 'png' });
+}
+
+export async function exportChartImage(element, {
+  mode = 'snapshot',
+  format = 'png',
+  filename,
+} = {}) {
+  if (!element) throw new Error('Nothing to export yet.');
+
+  const { toPng, toJpeg } = await import('html-to-image');
+  const toImage = format === 'jpeg' || format === 'jpg' ? toJpeg : toPng;
+  const cleanup = mode === 'full' ? prepareFullChartExport(element) : prepareSnapshotExport(element);
+
+  await waitForPaint();
+
   try {
-    const dataUrl = await toPng(element, { quality: 1, pixelRatio: 2, backgroundColor: '#0F172A' });
-    const a = document.createElement('a');
-    a.href = dataUrl;
-    a.download = 'gantt-chart.png';
-    a.click();
+    const dataUrl = await toImage(element, {
+      quality: 0.96,
+      pixelRatio: 2,
+      backgroundColor: getExportBackground(),
+      cacheBust: true,
+    });
+
+    const ext = format === 'jpeg' || format === 'jpg' ? 'jpg' : 'png';
+    downloadDataUrl(dataUrl, filename || `gantt-${mode}-${timestampForFilename()}.${ext}`);
   } finally {
-    element.classList.remove('exporting');
+    cleanup();
   }
 }
 
@@ -318,6 +333,104 @@ function download(blob, filename) {
   a.download = filename;
   a.click();
   URL.revokeObjectURL(url);
+}
+
+function downloadDataUrl(dataUrl, filename) {
+  const a = document.createElement('a');
+  a.href = dataUrl;
+  a.download = filename;
+  a.click();
+}
+
+function prepareSnapshotExport(element) {
+  element.classList.add('exporting', 'exporting-snapshot');
+  return () => element.classList.remove('exporting', 'exporting-snapshot');
+}
+
+function prepareFullChartExport(element) {
+  const body = element.querySelector('.gantt-body');
+  const headerScroll = element.querySelector('.gantt-header-scroll');
+  const leftCol = element.querySelector('.gantt-left-col');
+  const corner = element.querySelector('.gantt-corner');
+  const scrollNav = element.querySelector('.gantt-scroll-nav');
+  const restore = [];
+
+  const remember = (node, styles) => {
+    if (!node) return;
+    const previous = {};
+    for (const key of styles) previous[key] = node.style[key];
+    restore.push(() => {
+      for (const key of styles) node.style[key] = previous[key];
+    });
+  };
+
+  remember(element, ['width', 'height', 'minWidth', 'minHeight', 'overflow']);
+  remember(body, ['height', 'overflow', 'overflowX', 'overflowY']);
+  remember(headerScroll, ['overflow']);
+  remember(leftCol, ['width', 'minWidth']);
+  remember(corner, ['width', 'minWidth']);
+  remember(scrollNav, ['display']);
+
+  const originalScroll = body ? { left: body.scrollLeft, top: body.scrollTop } : null;
+  const exportLabelWidth = Math.min(500, Math.max(420, leftCol?.getBoundingClientRect().width || 0));
+
+  if (leftCol) {
+    leftCol.style.width = `${exportLabelWidth}px`;
+    leftCol.style.minWidth = `${exportLabelWidth}px`;
+  }
+  if (corner) {
+    corner.style.width = `${exportLabelWidth}px`;
+    corner.style.minWidth = `${exportLabelWidth}px`;
+  }
+
+  const fullWidth = Math.max(element.scrollWidth, body?.scrollWidth || 0, element.clientWidth);
+  const fullBodyHeight = Math.max(body?.scrollHeight || 0, body?.clientHeight || 0);
+  const fullHeight = Math.max(element.scrollHeight, fullBodyHeight + (element.querySelector('.gantt-header-row')?.offsetHeight || 0), element.clientHeight);
+
+  element.classList.add('exporting', 'exporting-full');
+  element.style.width = `${fullWidth}px`;
+  element.style.height = `${fullHeight}px`;
+  element.style.minWidth = `${fullWidth}px`;
+  element.style.minHeight = `${fullHeight}px`;
+  element.style.overflow = 'visible';
+
+  if (body) {
+    body.scrollLeft = 0;
+    body.scrollTop = 0;
+    body.style.height = `${fullBodyHeight}px`;
+    body.style.overflow = 'visible';
+    body.style.overflowX = 'visible';
+    body.style.overflowY = 'visible';
+  }
+  if (headerScroll) {
+    headerScroll.scrollLeft = 0;
+    headerScroll.style.overflow = 'visible';
+  }
+  if (scrollNav) scrollNav.style.display = 'none';
+
+  return () => {
+    if (body && originalScroll) {
+      body.scrollLeft = originalScroll.left;
+      body.scrollTop = originalScroll.top;
+    }
+    restore.reverse().forEach(fn => fn());
+    element.classList.remove('exporting', 'exporting-full');
+  };
+}
+
+async function waitForPaint() {
+  await new Promise(r => requestAnimationFrame(r));
+  await new Promise(r => requestAnimationFrame(r));
+  await new Promise(r => setTimeout(r, 80));
+}
+
+function getExportBackground() {
+  const value = getComputedStyle(document.documentElement).getPropertyValue('--background').trim();
+  return value || '#0F172A';
+}
+
+function timestampForFilename() {
+  return new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-');
 }
 
 function excelSheetMeta(name) {

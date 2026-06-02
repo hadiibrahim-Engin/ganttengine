@@ -155,6 +155,10 @@
 .export-dropdown button:hover {
   background: var(--bg-hover); color: var(--foreground);
 }
+.export-dropdown button:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
 
 /* ── Filter panel (position:fixed to avoid clipping) ── */
 .filter-panel {

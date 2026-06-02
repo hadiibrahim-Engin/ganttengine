@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import './DependencyArrows.css';
 
-const ARROW_COLOR = '#6366F1';
+const ARROW_COLOR = '#7C8DF7';
 
 function makePath(from, to) {
   const x1 = from.right;
@@ -73,8 +73,8 @@ export default function DependencyArrows({ allItems, itemPositions, totalHeight,
   return (
     <svg className="dep-arrows-svg" style={{ width: totalWidth, height: totalHeight }}>
       <defs>
-        <marker id="dep-arrow" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto" markerUnits="strokeWidth">
-          <path d="M0,0.5 L5,3 L0,5.5 Z" fill={ARROW_COLOR} opacity="0.8" />
+        <marker id="dep-arrow" markerWidth="6" markerHeight="6" refX="4.5" refY="3" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,1 L4.5,3 L0,5 Z" fill={ARROW_COLOR} opacity="0.55" />
         </marker>
       </defs>
       {arrows.map(({ key, fromPos, toPos, depType }, i) => (
@@ -82,11 +82,16 @@ export default function DependencyArrows({ allItems, itemPositions, totalHeight,
           key={key}
           className="dep-arrow-path"
           d={makePath(fromPos, toPos)}
+          fill="none"
           stroke={ARROW_COLOR}
+          strokeWidth="1.1"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          opacity="0.42"
           strokeDasharray={depType === 'FS' ? 'none' : '5 3'}
           markerEnd="url(#dep-arrow)"
           initial={{ pathLength: 0, opacity: 0 }}
-          animate={{ pathLength: 1, opacity: 0.55 }}
+          animate={{ pathLength: 1, opacity: 0.42 }}
           transition={{ duration: 0.5, delay: i * 0.05, ease: 'easeOut' }}
         />
       ))}

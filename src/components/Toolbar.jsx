@@ -3,7 +3,7 @@ import {
   Search, ZoomIn, ZoomOut, RotateCcw, Maximize2,
   Upload, Undo2, Redo2, Plus, Moon, Sun, History,
   SlidersHorizontal, X, Download,
-  FileSpreadsheet, FileJson, FileText, Camera,
+  FileSpreadsheet, FileJson, FileText, Camera, Image,
 } from 'lucide-react';
 import { parseJSON, parseCSV, exportJSON, exportCSV, exportExcel, exportPNG } from '../utils/importExport';
 import { SNAP_OPTIONS, GROUPING_OPTIONS, ITEM_TYPE_CONFIG, STATUS_CONFIG } from '../config/theme';
@@ -32,6 +32,7 @@ export default function Toolbar({
   const [showFilters, setShowFilters]   = useState(false);
   const [exportPos,   setExportPos]     = useState({ top: 0, right: 0 });
   const [filterPos,   setFilterPos]     = useState({ top: 0, left: 0 });
+  const [exportingImage, setExportingImage] = useState(false);
 
   // Calculate fixed positions when dropdowns open so they appear just below their buttons
   const openExport = useCallback(() => {
@@ -82,10 +83,18 @@ export default function Toolbar({
     e.target.value = '';
   }, [onData, onError]);
 
-  const handleExportPNG = useCallback(async () => {
-    if (chartRef?.current) await exportPNG(chartRef.current);
+  const handleExportImage = useCallback(async (mode) => {
+    if (!chartRef?.current || exportingImage) return;
+    setExportingImage(true);
     setShowExport(false);
-  }, [chartRef]);
+    try {
+      await exportPNG(chartRef.current, { mode });
+    } catch (err) {
+      onError?.(err?.message || 'Could not export image.');
+    } finally {
+      setExportingImage(false);
+    }
+  }, [chartRef, exportingImage, onError]);
 
   const items    = ganttData?.items    || [];
   const projects = ganttData?.projects || [];
@@ -209,7 +218,12 @@ export default function Toolbar({
             <button onClick={() => { exportJSON(ganttData); setShowExport(false); }}><FileJson size={12} /> JSON</button>
             <button onClick={() => { exportCSV(items, projects, assets); setShowExport(false); }}><FileText size={12} /> CSV</button>
             <button onClick={() => { exportExcel(items, projects, assets); setShowExport(false); }}><FileSpreadsheet size={12} /> Excel</button>
-            <button onClick={handleExportPNG}><Camera size={12} /> PNG</button>
+            <button onClick={() => handleExportImage('snapshot')} disabled={exportingImage}>
+              <Camera size={12} /> Snapshot PNG
+            </button>
+            <button onClick={() => handleExportImage('full')} disabled={exportingImage}>
+              <Image size={12} /> Full chart PNG
+            </button>
           </div>
         )}
       </div>
